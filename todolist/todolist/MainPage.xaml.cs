@@ -1,27 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-
-// Pour plus d'informations sur le modèle d'élément Page vierge, consultez la page https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace todolist
 {
     public sealed partial class MainPage : Page
     {
+        private int Nb;
+        private int PopUpId;
+        private string tmpName;
+        private List<Task> TasksList;
+        public MainPage()
+        {
+            Nb = 0;
+            TasksList = new List<Task>();
+            this.InitializeComponent();
+            ReadFile();
+        }
         private void ItemClickParam(object sender, ItemClickEventArgs e)
         {
             Task task = (Task)e.ClickedItem;
+            tmpName = task.TaskName;
             if (task.TaskName != "")
                 NameItem.Text = task.TaskName;
             else
@@ -72,14 +73,7 @@ namespace todolist
         {
             if (AddText.Text != "")
             {
-                TaskList.Items.Add(new Task {
-                    TaskName = AddText.Text,
-                    IsChecked = false,
-                    Comment = "",
-                    DateTask = "",
-                    TimeTask = "",
-                    Id = Nb });
-                TasksList.Add(new Task
+                Task tmp = new Task
                 {
                     TaskName = AddText.Text,
                     IsChecked = false,
@@ -87,7 +81,9 @@ namespace todolist
                     DateTask = "",
                     TimeTask = "",
                     Id = Nb
-                });
+                };
+                TaskList.Items.Add(tmp);
+                TasksList.Add(tmp);
                 WriteFile();
                 ++Nb;
                 AddText.Text = "";
@@ -99,24 +95,30 @@ namespace todolist
         {
             if (StandardPopup.IsOpen) { StandardPopup.IsOpen = false; }
         }
+        private string ConvertDateToString(DatePicker date)
+        {
+            return (date.Date.ToString());
+        }
+        private string ConvertTimeToString(TimePicker time)
+        {
+            return (time.Time.ToString());
+        }
         private void CloseWithSavePopupClicked(object sender, RoutedEventArgs e)
         {
-            TaskList.Items.Insert(PopUpId, new Task {
-                TaskName = NameItem.Text,
-                IsChecked = (bool)BoxState.IsChecked,
-                Comment = CommentItem.Text,
-                DateTask = DateItem.Date.ToString(),
-                TimeTask = TimeItem.Time.ToString(),
-                Id = PopUpId});
-            TasksList.Insert(PopUpId, new Task
+            if (NameItem.Text == String.Empty)
+                NameItem.Text = tmpName;
+            tmpName = "";
+            Task tmp = new Task
             {
                 TaskName = NameItem.Text,
                 IsChecked = (bool)BoxState.IsChecked,
                 Comment = CommentItem.Text,
-                DateTask = DateItem.Date.ToString(),
-                TimeTask = TimeItem.Time.ToString(),
+                DateTask = ConvertDateToString(DateItem),
+                TimeTask = ConvertTimeToString(TimeItem),
                 Id = PopUpId
-            });
+            };
+            TaskList.Items.Insert(PopUpId, tmp);
+            TasksList.Insert(PopUpId, tmp);
             TaskList.Items.RemoveAt(PopUpId + 1);
             TasksList.RemoveAt(PopUpId + 1);
             WriteFile();
@@ -155,15 +157,5 @@ namespace todolist
                                                             Windows.Storage.CreationCollisionOption.ReplaceExisting);
             await Windows.Storage.FileIO.WriteTextAsync(sampleFile, Newtonsoft.Json.JsonConvert.SerializeObject(TasksList));
         }
-        public MainPage()
-        {
-            Nb = 0;
-            TasksList = new List<Task>();
-            this.InitializeComponent();
-            ReadFile();
-        }
-        private int Nb;
-        private int PopUpId;
-        private List<Task> TasksList;
     }
 }

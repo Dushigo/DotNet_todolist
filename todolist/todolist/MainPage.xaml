@@ -37,9 +37,10 @@
                 Background="{StaticResource ApplicationPageBackgroundThemeBrush}"
                 BorderThickness="2" Width="400" Height="400">
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Height="400" Margin="-2" Width="400">
-                    <TextBox x:Name="NameItem" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,50,0,0" Width="154"/>
-                    <DatePicker x:Name="DateItem" Height="55" Width="100" Margin="50,50,0,0"/>
-                    <TimePicker x:Name="TimeItem" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="66" Margin="52,0,54,0" RenderTransformOrigin="0.5,0.5"/>
+                    <TextBox x:Name="NameItem" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,30,0,0" Width="154"/>
+                    <TextBlock Text="Due Date :" HorizontalAlignment="Left" Margin="60,40,0,0"/>
+                    <DatePicker x:Name="DateItem" Height="55" Width="100" Margin="50,10,0,0"/>
+                    <TimePicker x:Name="TimeItem" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="66" Margin="52,0,64,0" RenderTransformOrigin="0.5,0.5"/>
                     <TextBox x:Name="CommentItem" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="74,0,54,0" Width="272" Height="55"/>
                     <StackPanel>
                         <Button Content="Close" HorizontalAlignment="Right" VerticalAlignment="Center" Click="ClosePopupClicked" Height="32" Width="100" Margin="0,10,0,0"/>
